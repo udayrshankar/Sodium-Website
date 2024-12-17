@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect with Us</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="left-column">
+                <div class="heading-wrapper">
+                    <div class="circle-top"></div>
+                    <h1 class="main-heading">Connect with Our Experts!</h1>
+                    <div class="circle-bottom"></div>
+                </div>
+            </div>
+            <div class="right-column">
+                <form id="contactForm" class="form-container">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="fullName" 
+                            class="form-input"
+                            required
+                            aria-required="true"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email" 
+                            class="form-input"
+                            required
+                            aria-required="true"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone" 
+                            class="form-input"
+                            required
+                            aria-required="true"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Type Your Message Here</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            class="form-input"
+                            rows="4"
+                            required
+                            aria-required="true"
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">Submit</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include JavaScript at the end of the body -->
+    <script>
+        // Add event listener to the form submission
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Create a FormData object from the form
+            const formData = new FormData(event.target);
+
+            // Convert FormData to a plain object
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Send data to the backend
+            fetch('http://localhost:4001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert('Message sent successfully!');
+                        // Optionally reset the form
+                        event.target.reset();
+                    } else {
+                        alert('Failed to send message. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while sending the message.');
+                });
+        });
+    </script>
+</body>
+</html>
