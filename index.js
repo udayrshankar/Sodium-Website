@@ -8,7 +8,7 @@ const port = process.env.PORT || 4001;
 
 // Middleware
 app.use(cors({
-    origin: 'https://<your-github-username>.github.io', // Replace with your GitHub Pages domain
+    origin: 'https://udayrshankar.github.io', // Replace with your GitHub Pages domain
     methods: ['POST'], // Allow only POST requests
     allowedHeaders: ['Content-Type'], // Allow specific headers
 }));
