@@ -1,66 +1,51 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-require('dotenv').config(); // For environment variables
+require('dotenv').config();
 
-const app = express(); // Initialize express app
-const port = 4001;
-const email = 'na23b035@smail.iitm.ac.in'
-const password = 'TmqQ5w9tcFE'
+const app = express();
+const port = process.env.PORT || 4001;
 
-// Enable CORS for all origins (can restrict origins if needed)
+// Middleware
 app.use(cors());
-
-// Middleware to parse incoming JSON data
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Configure email settings (use your email credentials)
+// Serve static files from the public folder
+app.use(express.static('public'));
+
 const transporter = nodemailer.createTransport({
-    service: 'gmail',//.............venne matiya mathi
+    service: 'gmail',
     auth: {
-        user: 'testusersodium@gmail.com', // Your email address.................................................................................................................................................
-        pass: 'fyeioutovnmirglx',             // Your email password (use an app password if necessary).....................................................................................................................
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 
-// Define the POST route to handle form submissions
 app.post('/login', (req, res) => {
-    // Destructure form data from the request body
     const { fullName, email, phone, message } = req.body;
 
-    // Log the received data (optional for debugging)
-    console.log('Form Data Received:', { fullName, email, phone, message });
-
-    // Check if any field is missing
-    if (!fullName || !email || !phone || !message) {
-        return res.status(400).send('All fields are required!');
-    }
-
-    // Create email options
     const mailOptions = {
-        from: 'testusersodium@gmail.com', // Sender email........................................................................................................................
-        to: 'udaymadavana40@gmail.com',   // Recipient email...........................................................................................
-        subject: 'New Contact Form Submission',
+        from: process.env.EMAIL_USER,
+        to: 'your-email@example.com', // Replace with your email
+        subject: 'Contact Form Submission',
         text: `
-            Name: ${fullName} 
+            Name: ${fullName}
             Email: ${email}
             Phone: ${phone}
             Message: ${message}
         `,
     };
 
-    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).send('Error sending email.');
+            console.error(error);
+            return res.status(500).send('Error sending email');
         }
-        console.log('Email sent:', info.response);
-        return res.status(200).send('Email sent successfully!');
+        res.send('Email sent successfully!');
     });
 });
 
-// Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
